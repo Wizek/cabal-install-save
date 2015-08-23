@@ -1,6 +1,4 @@
-
-
-This is a shell script 'solution' I've put together so we can have [this](https://github.com/haskell/cabal/issues/1961) functionality even before it is implemented in cabal: https://github.com/Wizek/cabal-install-save
+This is a shell script 'solution' I've put together so we can have [this](https://github.com/haskell/cabal/issues/1961) functionality even before it is implemented in cabal.
 
 It looks for the latest version of the specified package, adds it to the *.cabal file then does a `cabal install --only-dependencies`.
 
