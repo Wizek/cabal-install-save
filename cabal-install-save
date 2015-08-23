@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+name=$1
+
+#latestVersion=`cabal info "$name" | grep`
+# latestVersion="-any"
+
+
+function latestVersionOfPackage () {
+  # echo `cabal info $1 | grep -Pzo 'Versions available:(.|\n)*?:' | head -n-1 | grep -ro '\S*$'`
+  cabal info "$1" \
+    | grep -Pzo 'Versions available:(.|\n)*?:' \
+    | head -n-1 \
+    | tail -n1 \
+    | sed -r 's/.*? ([0-9.]+)\s*(\(and [0-9]+ others\))?\s*?/\1/'
+}
+
+function addDepToCabalFile () {
+  # perl -0777 -pe 's/(\s*)(build-depends:)(\s+)(.*?)\n/$1$2$3'$1',$1              $3$4\n/igs' *.cabal
+  sed -i.bak -r 's/(\s*)(build-depends:)(\s+)(.*?)$/\1\2\3'"$1"',\n\1              \3\4/ig' *.cabal
+}
+latestVersion=$(latestVersionOfPackage $name)
+
+echo Latest version found: $latestVersion
+
+addDepToCabalFile "$name ==$latestVersion"
+
+cabal install --only-dependencies
